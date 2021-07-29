@@ -1,7 +1,6 @@
 const TODO=require('../models/todoModel')
 
 exports.createTask = async (req, res) => {
-    console.log(req.body)
     try {
         const task = new TODO(req.body);
         if (!task) {
@@ -17,9 +16,9 @@ exports.createTask = async (req, res) => {
     }
 }
 exports.toggleTask = async (req, res) => {
-    const task=req.query.task
+    const id=req.query.id
     try {
-        const taskObj = await TODO.findOne({task});
+        const taskObj = await TODO.findById(id);
         if (!taskObj) {
             res.status(404).send({
                 status:404,
@@ -40,7 +39,7 @@ exports.getTasks = async (req, res) => {
     try {
         const tasks = await TODO.find({});
         if (!tasks) {
-            return res.status(404).send({
+            return res.status(400).send({
                 status:400,
                 message:'Bad request'
             })
@@ -54,11 +53,11 @@ exports.getTasks = async (req, res) => {
     }
 }
 exports.deleteTask = async (req, res) => {
-    const task=req.query.task
+    const id=req.query.id
     try {
-        const taskObj = await TODO.findOneAndDelete({task});
+        const taskObj = await TODO.findByIdAndDelete(id);
         if (!taskObj) {
-            res.status(404).send({
+            res.status(400).send({
                 status:400,
                 message:'Bad request'
             })
